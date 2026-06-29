@@ -60,5 +60,13 @@ client.once(Events.ClientReady, () => {
   console.log('CoC Advisor online');
 });
 
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled rejection:', error);
+});
+
+client.on('error', (error) => {
+  console.error('Discord client error:', error);
+});
+
 initDb();
 await client.login(process.env.DISCORD_TOKEN);
