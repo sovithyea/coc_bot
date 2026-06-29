@@ -27,11 +27,22 @@ for (const file of commandFiles) {
   }
 }
 
-// Handle slash commands
+// Handle slash commands and autocomplete
 client.on(Events.InteractionCreate, async interaction => {
-  if (!interaction.isChatInputCommand()) return;
   const command = client.commands.get(interaction.commandName);
   if (!command) return;
+
+  if (interaction.isAutocomplete()) {
+    try {
+      await command.execute(interaction);
+    } catch (err) {
+      console.error(`Autocomplete error in /${interaction.commandName}:`, err);
+    }
+    return;
+  }
+
+  if (!interaction.isChatInputCommand()) return;
+
   try {
     await command.execute(interaction);
   } catch (err) {
