@@ -1,0 +1,47 @@
+[
+  {
+    "id": "tatari_001",
+    "name": "Crimson Fang",
+    "element": "fire",
+    "rarity": "legendary",
+    "description": "A fearsome fire-type Tatari with devastating flame attacks.",
+    "abilities": ["Ember Strike", "Inferno Roar"],
+    "notes": "Placeholder entry — fill with real game data."
+  },
+  {
+    "id": "tatari_002",
+    "name": "Tide Serpent",
+    "element": "water",
+    "rarity": "epic",
+    "description": "A swift water-type Tatari that controls ocean currents.",
+    "abilities": ["Tidal Surge", "Whirlpool"],
+    "notes": "Placeholder entry — fill with real game data."
+  },
+  {
+    "id": "tatari_003",
+    "name": "Stone Colossus",
+    "element": "earth",
+    "rarity": "rare",
+    "description": "A slow but nearly indestructible earth-type Tatari.",
+    "abilities": ["Boulder Crush", "Tremor"],
+    "notes": "Placeholder entry — fill with real game data."
+  },
+  {
+    "id": "tatari_004",
+    "name": "Gale Wing",
+    "element": "wind",
+    "rarity": "epic",
+    "description": "An agile wind-type Tatari that strikes before enemies can react.",
+    "abilities": ["Razor Wind", "Cyclone Dash"],
+    "notes": "Placeholder entry — fill with real game data."
+  },
+  {
+    "id": "tatari_005",
+    "name": "Void Shade",
+    "element": "dark",
+    "rarity": "legendary",
+    "description": "A mysterious dark-type Tatari that drains enemy energy.",
+    "abilities": ["Shadow Drain", "Null Pulse"],
+    "notes": "Placeholder entry — fill with real game data."
+  }
+]

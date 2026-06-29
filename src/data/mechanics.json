@@ -1,0 +1,43 @@
+{
+  "elementCounters": {
+    "fire": ["water", "earth"],
+    "water": ["wind", "fire"],
+    "earth": ["wind", "water"],
+    "wind": ["fire", "earth"],
+    "light": ["dark"],
+    "dark": ["light"]
+  },
+  "gameModes": {
+    "pvp": {
+      "teamSize": 3,
+      "description": "3v3 real-time player battles"
+    },
+    "raid": {
+      "teamSize": 5,
+      "description": "5-critter cooperative boss encounter"
+    },
+    "arena": {
+      "teamSize": 4,
+      "description": "4v4 ranked competitive mode"
+    }
+  },
+  "formationRules": {
+    "frontRow": {
+      "maxSlots": 2,
+      "recommended": ["tank", "bruiser"],
+      "description": "Front row critters absorb damage first"
+    },
+    "backRow": {
+      "maxSlots": 2,
+      "recommended": ["ranged", "support", "mage"],
+      "description": "Back row critters are protected by front row"
+    },
+    "flex": {
+      "maxSlots": 1,
+      "recommended": ["any"],
+      "description": "Middle/flex slot for tactical flexibility"
+    }
+  },
+  "rarityTiers": ["common", "uncommon", "rare", "epic", "legendary"],
+  "roles": ["tank", "bruiser", "ranged", "mage", "support", "assassin"]
+}
