@@ -15,7 +15,7 @@ export async function execute(interaction) {
       },
       {
         name: '📋 /roster',
-        value: '`/roster set` — Save your Tatari (format: `Frostluna T3, Magnedart T3`)\n`/roster view` — See your saved roster\n`/roster clear` — Wipe your roster',
+        value: '`/roster set` — Replace entire roster (format: `Frostluna T3, Magnedart T3`)\n`/roster add` — Add or update one Tatari with autocomplete\n`/roster remove` — Remove one Tatari with autocomplete\n`/roster view` — See your saved roster\n`/roster clear` — Wipe your roster',
       },
       {
         name: '🎯 /comp',
@@ -30,12 +30,8 @@ export async function execute(interaction) {
         value: 'Look up any Tatari — autocompletes as you type. Shows skills, evolution line, aura, synergies, upgrade priority.',
       },
       {
-        name: '📖 /guide',
-        value: 'Learn how the game works.\n`/guide basics` — game overview and pinball combat\n`/guide elements` — element counter system\n`/guide evolution` — how to evolve Tatari\n`/guide auras` — all aura carriers and effects\n`/guide modes` — Campaign, HordeInvasion, BadgeDojo, GoldRush\n`/guide comps` — team building and formation rules',
-      },
-      {
         name: '📊 /tier',
-        value: 'Shows the tier list by element.\nExample: `/tier element:Fire`',
+        value: 'Shows tier list by element — S/A/B tiers.\nExample: `/tier element:Fire`',
       },
       {
         name: '⚔️ /compare',
@@ -43,7 +39,19 @@ export async function execute(interaction) {
       },
       {
         name: '⬆️ /upgrade',
-        value: 'Find out which Tatari to evolve next based on your roster.\nRequires roster to be set first.',
+        value: 'Which Tatari to evolve next based on your roster.\nRequires roster to be set first.',
+      },
+      {
+        name: '🗺️ /stage',
+        value: 'Stage-specific advice — enemies, element, formation, tips.\nExample: `/stage stage:8-70`',
+      },
+      {
+        name: '🏆 /meta',
+        value: 'Best meta comps per game mode, no roster needed.\nExample: `/meta mode:Campaign`',
+      },
+      {
+        name: '📖 /guide',
+        value: 'Learn game mechanics.\n`/guide basics` · `/guide elements` · `/guide evolution`\n`/guide auras` · `/guide modes` · `/guide comps`',
       },
       {
         name: '💡 Tips',

@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Collection, EmbedBuilder, Events, GatewayIntentBits } from 'discord.js';
 import { readdirSync } from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
@@ -49,6 +49,8 @@ client.on(Events.InteractionCreate, async interaction => {
 
   try {
     await command.execute(interaction);
+    const optionsStr = interaction.options.data.map(o => `${o.name}:${o.value ?? o.options?.map(s => s.value).join(',') ?? ''}`).join(' ') || null;
+    logCommand(client, interaction.user.id, interaction.user.username, interaction.commandName, optionsStr);
   } catch (err) {
     console.error(`Error in /${interaction.commandName}:`, err);
     const msg = { content: 'An error occurred.', ephemeral: true };
@@ -140,6 +142,7 @@ client.on(Events.MessageCreate, async message => {
 
   try {
     await command.execute(fakeInteraction);
+    logCommand(client, message.author.id, message.author.username, commandName, rawArgString || null);
   } catch (err) {
     console.error(`Message command error in ${commandName}:`, err);
     if (thinkingMsg) {
@@ -161,6 +164,30 @@ process.on('unhandledRejection', (error) => {
 client.on('error', (error) => {
   console.error('Discord client error:', error);
 });
+
+async function logCommand(client, userId, username, commandName, options) {
+  const logChannelId = process.env.LOG_CHANNEL_ID;
+  if (!logChannelId) return;
+
+  try {
+    const channel = await client.channels.fetch(logChannelId);
+    if (!channel) return;
+
+    const embed = new EmbedBuilder()
+      .setTitle('Command Used')
+      .addFields(
+        { name: 'User', value: `${username} (${userId})`, inline: true },
+        { name: 'Command', value: `/${commandName}`, inline: true },
+        { name: 'Options', value: options || 'none', inline: false },
+      )
+      .setColor(0x5865F2)
+      .setTimestamp();
+
+    await channel.send({ embeds: [embed] });
+  } catch (err) {
+    console.error('Log error:', err);
+  }
+}
 
 initDb();
 await client.login(process.env.DISCORD_TOKEN);
