@@ -7,6 +7,9 @@ Discord bot for Clash of Critters — team composition, counters, and Tatari kno
 - Node.js 18+
 - A Discord application with a bot token ([Discord Developer Portal](https://discord.com/developers/applications))
 - An Anthropic API key
+- **Windows users:** `better-sqlite3` requires native compilation. Install one of:
+  - Visual C++ build tools: `npm install --global windows-build-tools` (or via Visual Studio installer)
+  - OR use `npm install --ignore-scripts` for the scaffold phase; database operations (Task 3+) require the native build
 
 ## Setup
 
@@ -67,3 +70,11 @@ src/
   data/               Static game data (JSON)
   prompts/            System prompt definitions
 ```
+
+## Known Issues
+
+### npm Audit Vulnerabilities (Discord.js)
+- `discord.js@14.14.1` depends on `undici <=6.26.0`, which has 4 unresolved vulnerabilities (1 high, 3 moderate)
+- Resolution requires downgrading to `discord.js@13.x`, a breaking change incompatible with current codebase
+- **Recommendation:** Monitor discord.js releases for upstream undici fixes. For production, validate undici usage in non-HTTP contexts or isolate the bot in a secure environment
+- Tracked: https://github.com/discordjs/discord.js/issues
