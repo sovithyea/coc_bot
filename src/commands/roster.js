@@ -87,7 +87,8 @@ function parseRosterInput(input) {
     const parts = raw.trim().split(/\s+/);
     if (!parts.length || !parts[0]) continue;
 
-    const last = parts[parts.length - 1];
+    const rawLast = parts[parts.length - 1];
+    const last = rawLast.replace(/-/g, '');
     let tier = 'T1';
     let nameParts = parts;
 
