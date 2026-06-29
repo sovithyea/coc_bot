@@ -62,6 +62,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Handle mention-based message commands  (@BotName command args...)
 client.on(Events.MessageCreate, async message => {
+  console.log(`[MSG] ${message.author.username}: ${message.content}`);
   if (message.author.bot) return;
 
   const botId = client.user?.id;
