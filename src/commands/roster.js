@@ -6,8 +6,34 @@ export const data = new SlashCommandBuilder()
   .setName('roster')
   .setDescription('Manage your Tatari roster')
   .addSubcommand(sub =>
+    sub.setName('add')
+      .setDescription('Add or update a single Tatari in your roster')
+      .addStringOption(opt =>
+        opt.setName('name')
+          .setDescription('Tatari name')
+          .setRequired(true)
+          .setAutocomplete(true))
+      .addStringOption(opt =>
+        opt.setName('tier')
+          .setDescription('Evolution tier')
+          .setRequired(true)
+          .addChoices(
+            { name: 'T1', value: 'T1' },
+            { name: 'T2', value: 'T2' },
+            { name: 'T3', value: 'T3' },
+            { name: 'T4', value: 'T4' },
+          )))
+  .addSubcommand(sub =>
+    sub.setName('remove')
+      .setDescription('Remove a single Tatari from your roster')
+      .addStringOption(opt =>
+        opt.setName('name')
+          .setDescription('Tatari name')
+          .setRequired(true)
+          .setAutocomplete(true)))
+  .addSubcommand(sub =>
     sub.setName('set')
-      .setDescription('Set your roster (replaces existing). Format: "Magnedart T4, Frostluna T3"')
+      .setDescription('Replace your entire roster at once. Format: "Magnedart T4, Frostluna T3"')
       .addStringOption(opt =>
         opt.setName('tatari_list')
           .setDescription('Comma-separated Tatari names with optional tier (T1-T4)')
@@ -20,7 +46,80 @@ export const data = new SlashCommandBuilder()
       .setDescription('Clear your entire roster'));
 
 export async function execute(interaction) {
+  if (interaction.isAutocomplete()) {
+    const focused = interaction.options.getFocused(true);
+    if (focused.name === 'name') {
+      const matches = tatariData
+        .filter(t => t.name.toLowerCase().includes(focused.value.toLowerCase()))
+        .slice(0, 25)
+        .map(t => ({ name: t.name, value: t.name }));
+      return interaction.respond(matches);
+    }
+    return interaction.respond([]);
+  }
+
   const sub = interaction.options.getSubcommand();
+
+  if (sub === 'add') {
+    const inputName = interaction.options.getString('name');
+    const tier = interaction.options.getString('tier');
+
+    const match = tatariData.find(t => t.name.toLowerCase() === inputName.toLowerCase());
+    if (!match) {
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle('❌ Not Recognised')
+            .setDescription(`\`${inputName}\` is not a known Tatari. Check spelling or use the autocomplete.`)
+            .setColor(0xE74C3C),
+        ],
+      });
+    }
+
+    const roster = getRoster(interaction.user.id);
+    const updated = roster.filter(e => e.name.toLowerCase() !== match.name.toLowerCase());
+    updated.push({ name: match.name, tier });
+    setRoster(interaction.user.id, updated);
+
+    return interaction.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle('✅ Roster Updated')
+          .setDescription(`**${match.name} ${tier}** added to your roster.`)
+          .setColor(0x5865F2),
+      ],
+    });
+  }
+
+  if (sub === 'remove') {
+    const inputName = interaction.options.getString('name');
+    const roster = getRoster(interaction.user.id);
+    const idx = roster.findIndex(e => e.name.toLowerCase() === inputName.toLowerCase());
+
+    if (idx === -1) {
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setTitle('❌ Not Found')
+            .setDescription(`\`${inputName}\` not found in your roster.`)
+            .setColor(0xE74C3C),
+        ],
+      });
+    }
+
+    const removed = roster[idx];
+    roster.splice(idx, 1);
+    setRoster(interaction.user.id, roster);
+
+    return interaction.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle('✅ Removed')
+          .setDescription(`**${removed.name}** removed from your roster.`)
+          .setColor(0x5865F2),
+      ],
+    });
+  }
 
   if (sub === 'set') {
     const input = interaction.options.getString('tatari_list');
@@ -71,11 +170,14 @@ export async function execute(interaction) {
 
   if (sub === 'clear') {
     clearRoster(interaction.user.id);
-    const embed = new EmbedBuilder()
-      .setTitle('🗑️ Roster Cleared')
-      .setDescription('Your roster has been cleared. Use `/roster set` to add Tatari again.')
-      .setColor(0x5865F2);
-    return interaction.reply({ embeds: [embed] });
+    return interaction.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle('🗑️ Roster Cleared')
+          .setDescription('Your roster has been cleared. Use `/roster set` to add Tatari again.')
+          .setColor(0x5865F2),
+      ],
+    });
   }
 }
 
