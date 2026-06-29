@@ -62,7 +62,24 @@ export function buildTatariPrompt(name) {
 }
 
 export function buildUpgradePrompt(roster) {
-  return `Given my roster: ${roster.map(t => `${t.name} (${t.tier || 'T1'})`).join(', ')} — which Tatari should I prioritize evolving next and why?`;
+  const rosterStr = roster.map(t => `${t.name} (${t.tier || 'T1'})`).join(', ');
+  return `Given my roster: ${rosterStr} — which Tatari should I prioritize evolving next and why?
+
+Respond with JSON matching this exact schema:
+{
+  "topPick": {
+    "name": "Tatari name",
+    "currentTier": "T2",
+    "nextTier": "T3",
+    "why": "reason this is the priority evolution",
+    "unlocks": "what mechanic or ability unlocks at next tier"
+  },
+  "alsoConsider": [
+    { "name": "name", "currentTier": "T1", "nextTier": "T2", "why": "short reason" }
+  ],
+  "avoid": "which Tatari on their roster to deprioritize and why",
+  "reasoning": "2-3 sentence overall upgrade strategy"
+}`;
 }
 
 export { SYSTEM_PROMPT, tatariData, mechanicsData };
