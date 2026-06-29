@@ -3,6 +3,7 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { buildSystemPrompt } from './prompts/system.js';
+import { rateLimitedClaude } from './ratelimit.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -80,6 +81,10 @@ Respond with JSON matching this exact schema:
   "avoid": "which Tatari on their roster to deprioritize and why",
   "reasoning": "2-3 sentence overall upgrade strategy"
 }`;
+}
+
+export async function askClaudeRateLimited(userId, userMessage) {
+  return rateLimitedClaude(userId, () => askClaude(userMessage));
 }
 
 export { SYSTEM_PROMPT, tatariData, mechanicsData };

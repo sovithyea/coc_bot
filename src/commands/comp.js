@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { getRoster } from '../db.js';
-import { askClaude, buildCompPrompt } from '../ai.js';
+import { askClaudeRateLimited, buildCompPrompt } from '../ai.js';
 
 const ELEMENT_COLORS = {
   Fire: 0xFF6B35,
@@ -48,7 +48,7 @@ export async function execute(interaction) {
   const roster = getRoster(interaction.user.id);
 
   try {
-    const result = await askClaude(buildCompPrompt({ roster, mode, enemyElement, stage }));
+    const result = await askClaudeRateLimited(interaction.user.id, buildCompPrompt({ roster, mode, enemyElement, stage }));
 
     if (result.error) {
       return interaction.editReply({ embeds: [errorEmbed()] });
@@ -80,9 +80,25 @@ export async function execute(interaction) {
     });
 
     await interaction.editReply({ embeds: [embed] });
-  } catch {
-    await interaction.editReply({ embeds: [errorEmbed()] });
+  } catch (err) {
+    await interaction.editReply({ embeds: [claudeErrorEmbed(err)] });
   }
+}
+
+function claudeErrorEmbed(err) {
+  if (err?.message === 'DAILY_LIMIT_REACHED') {
+    return new EmbedBuilder()
+      .setTitle('⚠️ Daily Limit Reached')
+      .setDescription('The bot has hit its daily limit of Claude API calls. Try again tomorrow.')
+      .setColor(0xE74C3C);
+  }
+  if (err?.message?.toLowerCase().includes('bottleneck')) {
+    return new EmbedBuilder()
+      .setTitle('⏳ Slow Down')
+      .setDescription("You're using the bot too fast. Wait 15 seconds between commands.")
+      .setColor(0xF39C12);
+  }
+  return errorEmbed();
 }
 
 function errorEmbed() {

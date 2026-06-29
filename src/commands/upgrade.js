@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { getRoster } from '../db.js';
-import { askClaude, buildUpgradePrompt } from '../ai.js';
+import { askClaudeRateLimited, buildUpgradePrompt } from '../ai.js';
 
 export const data = new SlashCommandBuilder()
   .setName('upgrade')
@@ -23,7 +23,7 @@ export async function execute(interaction) {
   await interaction.deferReply();
 
   try {
-    const result = await askClaude(buildUpgradePrompt(roster));
+    const result = await askClaudeRateLimited(interaction.user.id, buildUpgradePrompt(roster));
 
     if (result.error) {
       return interaction.editReply({ embeds: [errorEmbed()] });
@@ -61,9 +61,25 @@ export async function execute(interaction) {
     embed.setFooter({ text: 'Resources are scarce — focus on one Tatari at a time' });
 
     await interaction.editReply({ embeds: [embed] });
-  } catch {
-    await interaction.editReply({ embeds: [errorEmbed()] });
+  } catch (err) {
+    await interaction.editReply({ embeds: [claudeErrorEmbed(err)] });
   }
+}
+
+function claudeErrorEmbed(err) {
+  if (err?.message === 'DAILY_LIMIT_REACHED') {
+    return new EmbedBuilder()
+      .setTitle('⚠️ Daily Limit Reached')
+      .setDescription('The bot has hit its daily limit of Claude API calls. Try again tomorrow.')
+      .setColor(0xE74C3C);
+  }
+  if (err?.message?.toLowerCase().includes('bottleneck')) {
+    return new EmbedBuilder()
+      .setTitle('⏳ Slow Down')
+      .setDescription("You're using the bot too fast. Wait 15 seconds between commands.")
+      .setColor(0xF39C12);
+  }
+  return errorEmbed();
 }
 
 function errorEmbed() {
