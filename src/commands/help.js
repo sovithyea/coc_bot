@@ -30,6 +30,10 @@ export async function execute(interaction) {
         value: 'Look up any Tatari — autocompletes as you type. Shows skills, evolution line, aura, synergies, upgrade priority.',
       },
       {
+        name: '📖 /guide',
+        value: 'Learn how the game works.\n`/guide basics` — game overview and pinball combat\n`/guide elements` — element counter system\n`/guide evolution` — how to evolve Tatari\n`/guide auras` — all aura carriers and effects\n`/guide modes` — Campaign, HordeInvasion, BadgeDojo, GoldRush\n`/guide comps` — team building and formation rules',
+      },
+      {
         name: '💡 Tips',
         value: '→ Always set your roster first for personalised comps\n→ Specify `enemy_element` for better advice\n→ Update your roster when you evolve a Tatari\n→ A T3 common beats a T1 rare every time',
       },
