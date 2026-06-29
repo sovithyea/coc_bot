@@ -36,49 +36,62 @@ export const data = new SlashCommandBuilder()
       ));
 
 export async function execute(interaction) {
-  const element = interaction.options.getString('element') ?? 'All';
+  await interaction.deferReply();
 
-  const pool = element === 'All'
-    ? tatariData
-    : tatariData.filter(t => t.element === element);
+  try {
+    const element = interaction.options.getString('element') ?? 'All';
 
-  const groups = { S: [], A: [], B: [] };
+    const pool = element === 'All'
+      ? tatariData
+      : tatariData.filter(t => t.element === element);
 
-  for (const t of pool) {
-    const tier = RARITY_TIER[t.rarity];
-    if (groups[tier]) {
-      groups[tier].push(t);
+    const groups = { S: [], A: [], B: [] };
+
+    for (const t of pool) {
+      const tier = RARITY_TIER[t.rarity];
+      if (groups[tier]) {
+        groups[tier].push(t);
+      }
     }
+
+    for (const tier of Object.keys(groups)) {
+      groups[tier].sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    const fmt = t => `${t.name} — ${t.element} ${t.class}`;
+
+    const emoji = ELEMENT_EMOJIS[element] ?? '🏆';
+    const title = element === 'All' ? '🏆 Full Tier List' : `${emoji} ${element} Tier List`;
+    const color = ELEMENT_COLORS[element] ?? 0x5865F2;
+
+    const embed = new EmbedBuilder()
+      .setTitle(title)
+      .setColor(color)
+      .setFooter({ text: 'Tier = rarity. Higher rarity unlocks stronger final evolutions.' });
+
+    if (groups.S.length) {
+      embed.addFields({ name: '⭐ S Tier (Mythic)', value: groups.S.map(fmt).join('\n') });
+    }
+    if (groups.A.length) {
+      embed.addFields({ name: '🔥 A Tier (Legendary)', value: groups.A.map(fmt).join('\n') });
+    }
+    if (groups.B.length) {
+      embed.addFields({ name: '📊 B Tier (Epic)', value: groups.B.map(fmt).join('\n') });
+    }
+
+    if (!groups.S.length && !groups.A.length && !groups.B.length) {
+      embed.setDescription('No Tatari found for this filter.');
+    }
+
+    await interaction.editReply({ embeds: [embed] });
+  } catch {
+    await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setTitle('Something went wrong')
+          .setDescription("Couldn't load the tier list. Try again in a moment.")
+          .setColor(0xE74C3C),
+      ],
+    });
   }
-
-  for (const tier of Object.keys(groups)) {
-    groups[tier].sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  const fmt = t => `${t.name} — ${t.element} ${t.class}`;
-
-  const emoji = ELEMENT_EMOJIS[element] ?? '🏆';
-  const title = element === 'All' ? '🏆 Full Tier List' : `${emoji} ${element} Tier List`;
-  const color = ELEMENT_COLORS[element] ?? 0x5865F2;
-
-  const embed = new EmbedBuilder()
-    .setTitle(title)
-    .setColor(color)
-    .setFooter({ text: 'Tier = rarity. Higher rarity unlocks stronger final evolutions.' });
-
-  if (groups.S.length) {
-    embed.addFields({ name: '⭐ S Tier (Mythic)', value: groups.S.map(fmt).join('\n') });
-  }
-  if (groups.A.length) {
-    embed.addFields({ name: '🔥 A Tier (Legendary)', value: groups.A.map(fmt).join('\n') });
-  }
-  if (groups.B.length) {
-    embed.addFields({ name: '📊 B Tier (Epic)', value: groups.B.map(fmt).join('\n') });
-  }
-
-  if (!groups.S.length && !groups.A.length && !groups.B.length) {
-    embed.setDescription('No Tatari found for this filter.');
-  }
-
-  await interaction.reply({ embeds: [embed] });
 }
