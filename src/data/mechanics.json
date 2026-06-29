@@ -1,43 +1,106 @@
 {
   "elementCounters": {
-    "fire": ["water", "earth"],
-    "water": ["wind", "fire"],
-    "earth": ["wind", "water"],
-    "wind": ["fire", "earth"],
-    "light": ["dark"],
-    "dark": ["light"]
+    "Water": "Fire",
+    "Fire": "Leaf",
+    "Lightning": "Water",
+    "Grass": "Rock",
+    "Rock": "Lightning",
+    "note": "Attacker's element deals 200% damage to the element it counters, 50% to the element that counters it"
+  },
+  "elementWeaknesses": {
+    "Fire": "Water",
+    "Leaf": "Fire",
+    "Water": "Lightning",
+    "Rock": "Grass",
+    "Lightning": "Rock"
+  },
+  "elements": {
+    "Fire":      { "color": 16737331, "emoji": "🔥", "counters": "Leaf/Grass", "weak": "Water" },
+    "Water":     { "color": 5227767,  "emoji": "💧", "counters": "Fire",       "weak": "Lightning" },
+    "Lightning": { "color": 16766720, "emoji": "⚡", "counters": "Water",      "weak": "Rock/Earth" },
+    "Grass":     { "color": 6730850,  "emoji": "🌿", "counters": "Rock/Earth", "weak": "Fire" },
+    "Rock":      { "color": 9265763,  "emoji": "🪨", "counters": "Lightning",  "weak": "Grass" }
+  },
+  "auraCarriers": {
+    "Lightning": ["Magnedart", "Stormlion", "Voltreaver"],
+    "Water":     ["Frostluna", "Haplysia", "Sealord", "Cribking"],
+    "Fire":      ["Pyrodaemon", "Newflamander", "Phantifox", "Chrysolaria"],
+    "Grass":     ["Frugantuan", "Beetleknight", "Pandagrand", "Orchitoria", "Hypnostrix"],
+    "Rock":      ["Meteorax", "Rockwu", "Terraton", "Cratzar"]
+  },
+  "auraEffects": {
+    "Lightning": "Increases ATK SPD of all allies",
+    "Water":     "Recovers HP for all allies passively",
+    "Fire":      "Boosts ATK of all allies",
+    "Grass":     "Increases Max HP of all allies",
+    "Rock":      "Reduces damage taken by all allies"
+  },
+  "knownComps": {
+    "LightningSpeed": {
+      "name": "Lightning speed comp",
+      "core": ["Stormlion", "Magnedart", "Cheerstella", "Voltreaver", "Boltallion"],
+      "strategy": "Rapid attacks + unlimited pierce + invincibility support. Fights end fast.",
+      "bestFor": ["Campaign", "HordeInvasion"],
+      "weakness": "Rock/Earth enemies counter the entire comp"
+    },
+    "WaterSustain": {
+      "name": "Water sustain comp",
+      "core": ["Frostluna", "Sealord", "Haplysia", "Glideflip", "Waveflutter"],
+      "strategy": "Passive HP regen + sleep CC + damage amp on wake. Nearly unkillable.",
+      "bestFor": ["Campaign", "HordeInvasion"],
+      "weakness": "Lightning counters Water hard"
+    },
+    "FireAggro": {
+      "name": "Fire aggro comp",
+      "core": ["Pyrodaemon", "Newflamander", "Phantifox", "Searhog", "Chrysolaria"],
+      "strategy": "Stack Fire Aura ATK buffs + Weaken debuffs. Shred waves before pressure builds.",
+      "bestFor": ["Campaign", "BadgeDojo"],
+      "weakness": "Water neutralises Fire advantage entirely"
+    },
+    "GrassControl": {
+      "name": "Grass control comp",
+      "core": ["Hypnostrix", "Frugantuan", "Beetleknight", "Pandagrand", "Weaverfang"],
+      "strategy": "Stun CC + Max HP aura + invincible dash disruptor. Zone denial wins.",
+      "bestFor": ["Campaign", "BadgeDojo"],
+      "weakness": "Fire burns through Grass units fast"
+    }
   },
   "gameModes": {
-    "pvp": {
-      "teamSize": 3,
-      "description": "3v3 real-time player battles"
-    },
-    "raid": {
-      "teamSize": 5,
-      "description": "5-critter cooperative boss encounter"
-    },
-    "arena": {
-      "teamSize": 4,
-      "description": "4v4 ranked competitive mode"
-    }
+    "Campaign":      "Standard progression. Always check enemy element before locking in. Boss appears at end on centre line.",
+    "HordeInvasion": "Co-op survival. Bring highest DPS. Survival over control.",
+    "BadgeDojo":     "Single element per run. Know your mono-element comps. Best rewards in game.",
+    "GoldRush":      "Speed mode. AoE and multi-hit Tatari excel."
   },
   "formationRules": {
-    "frontRow": {
-      "maxSlots": 2,
-      "recommended": ["tank", "bruiser"],
-      "description": "Front row critters absorb damage first"
-    },
-    "backRow": {
-      "maxSlots": 2,
-      "recommended": ["ranged", "support", "mage"],
-      "description": "Back row critters are protected by front row"
-    },
-    "flex": {
-      "maxSlots": 1,
-      "recommended": ["any"],
-      "description": "Middle/flex slot for tactical flexibility"
-    }
+    "frontline": "Tanks and Guardians — absorb damage, protect DPS",
+    "midline":   "Support and CC — safe from front pressure, covers multiple lanes",
+    "backline":  "Primary DPS and Healers — maximum safety for carries"
   },
-  "rarityTiers": ["common", "uncommon", "rare", "epic", "legendary"],
-  "roles": ["tank", "bruiser", "ranged", "mage", "support", "assassin"]
+  "teamStructure": {
+    "ideal":         "1 frontline tank/guardian + 1 primary DPS carry + 1 CC/support + 1 aura provider + 1 flex",
+    "auraRule":      "Mono-element team maximises aura uptime. 4+1 split is safer if enemy counters your element.",
+    "evolutionRule": "T3/T4 unlocks game-changing mechanics. A T3 common beats a T1 rare every time.",
+    "resourceRule":  "Pick 3-4 core Tatari and rush their evolution. Never spread upgrade materials."
+  },
+  "statusEffects": {
+    "Slow":      "Reduces enemy movement speed",
+    "Sleep":     "Upgraded from Slow — fully disables enemies, extra damage on wake",
+    "Stun":      "Fully disables enemies briefly",
+    "Paralysis": "Lightning-specific disable",
+    "Shredded":  "Increases damage taken by enemy",
+    "Fragile":   "Reduces enemy defense",
+    "Blind":     "Reduces enemy accuracy",
+    "Bind":      "Prevents enemy movement",
+    "Weaken":    "Reduces enemy ATK",
+    "Burn":      "Fire DoT damage",
+    "Pull":      "Draws enemies toward a point",
+    "Knockback": "Pushes enemies away",
+    "Scouted":   "Enemies take burst damage proportionate to total damage taken when effect expires"
+  },
+  "pinballMechanics": {
+    "overview":   "Launch-based combat — aim Tatari at enemies using trajectory angles",
+    "bankShots":  "Well-angled bank shot hits multiple enemies, triggers chain damage, builds ultimate faster",
+    "heavyUnits": "Maintain momentum after launch, punch through clusters",
+    "lightUnits": "Bounce unpredictably — advantage on spread formations"
+  }
 }
