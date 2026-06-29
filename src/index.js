@@ -50,4 +50,4 @@ client.once(Events.ClientReady, () => {
 });
 
 initDb();
-client.login(process.env.DISCORD_TOKEN);
+await client.login(process.env.DISCORD_TOKEN);
